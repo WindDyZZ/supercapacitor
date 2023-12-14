@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-
 import joblib
 import pickle
 from sklearn.feature_extraction.text import CountVectorizer
@@ -188,21 +187,29 @@ def handle_login(request):
         if 'login_form' in request.POST:
             username_post = request.POST.get('username_login')
             password_post = request.POST.get('password_login')
-            
+
             user = model.User.objects.filter(username = username_post).first()
-            print(user)
-            if user is None:
-                request.session['login'] = 'incorrect_login'
-                return redirect('ui:login')
+            email = model.User.objects.filter(email = username_post).first()
+        
 
-            if user.username == username_post and user.password == password_post:
-                # Redirect to a success page or do other actions
-                request.session['user'] = user.username
-
-                return redirect("ui:home")
+            if user.username is not None:
+                if user.password != password_post:
+                    request.session['user'] = user.username
+                    return redirect("ui:home")
+                else:    
+                    incorrect_login = True  
+                    request.session['login'] = 'incorrect_login'
+                    return redirect('ui:login')
+            elif email.username is not None:
+                if email.password != password_post:
+                    request.session['user'] = email.username
+                    return redirect("ui:home")
+                else:    
+                    incorrect_login = True  
+                    request.session['login'] = 'incorrect_login'
+                    return redirect('ui:login')
             else:
-
-                incorrect_login = True  # Set the variable if login is incorrect
+                incorrect_login = True  
                 request.session['login'] = 'incorrect_login'
                 return redirect('ui:login')
 
