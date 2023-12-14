@@ -133,3 +133,6 @@ function displayGraph() {
   
 }
 
+function calculate(){
+    document.getElementById('loading').style.display = 'block';
+}
