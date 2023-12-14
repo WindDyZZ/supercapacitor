@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script src="static\js\home.js"></script>
+{% endblock %}
+
+<!-- Left Panel -->
+{% block left %}
+    <div class="col d-flex  m-0" id="left-panel" >
+        <div class=" m-0 w-100" > 
+            <h2 class=" ms-0 mt-2">LOG: {{username}}</h2>
+
+            <br>
+              <table class="table table-striped m-auto ">
+                <thead>
+                  <tr>
+                    <th scope="col">Test No.</th>
+                    <th scope="col">PH</th>
+                    <th scope="col">SSA</th>
+                    <th scope="col">IDIG</th>
+                    <th scope="col">Nitrogen</th>
+                    <th scope="col">Oxygen</th>
+                    <th scope="col">Sulphur</th>
+                    <th scope="col">Density</th>
+                    <th scope="col">Predicted Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                    {% for data in test_data_page %}
+                    <tr>
+                      <th scope="row">{{forloop.revcounter}}</th>
+                      <td> {{data.ph}} </td>
+                      <td> {{data.ssa}} </td>
+                      <td> {{data.id_ig_ratio}} </td>
+                      <td> {{data.nitrogen}} </td>
+                      <td> {{data.oxygen}} </td>
+                      <td> {{data.sulphur}} </td>
+                      <td> {{data.density}} </td>
+                      <td> {{data.predicted_value}} </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+
+              <div class="pagination">
+                <span class="step-links">
+                    {% if test_data_page.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ test_data_page.previous_page_number }}">previous</a>
+                    {% endif %}
+            
+                    <span class="current">
+                        Page {{ test_data_page.number }} of {{ test_data_page.paginator.num_pages }}.
+                    </span>
+            
+                    {% if test_data_page.has_next %}
+                        <a href="?page={{ test_data_page.next_page_number }}">next</a>
+                        <a href="?page={{ test_data_page.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+{% endblock %}

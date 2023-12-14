@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+<!-- head extension -->
+{% block head %}
+<script src="static\js\handleLogin.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+{% endblock %}
+
+
+{% block left %}
+    <div class="col d-flex ps-5 align-items-center " id="left" style="min-height: 100%;">
+        
+        <div class="name" style="color: #000;text-align: center;font-family: Inter;font-style: normal;line-height: normal;text-transform: uppercase;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="65" viewBox="0 0 46 77" fill="none">
+                <path d="M0.838642 36.5L20.2981 0.5H39.1614L19.7019 36.5H0.838642Z" fill="#FF7A2F" stroke="#FF7A2F"/>
+                <path d="M21.0788 21.56L44.8021 21.5599L13.6231 66.3812L21.0788 21.56Z" fill="#FF7A2F" stroke="#FF7A2F"/>
+            </svg>
+            <div class="topic pt-3" style="font-size: 40px;font-weight: 800;">
+                <div>Supercapacitor<br>Capacitance Calculator</div>
+            </div>
+            
+            <div class="pt-5" style="font-size: 20px;font-weight: 400;">Calculate optional parameters for maximum capacitance </div>
+        </div>
+    </div>
+{% endblock %}
+{% block right %}     
+            <div class="col align-items-center " >
+                <input type="checkbox" id="check">
+                <!-- Login Form -->
+                <div class="login form pt-5" id="login-form">
+                    <header><u>Login</u></header>
+                    <form name="login_form" method="post" action="handle_login">
+                        {% csrf_token %}
+                        <div class="username_login">
+                            <label for="username_login">USERNAME</label>
+                            <input name="username_login" type="text" placeholder="Enter your username" id="username_login" required>
+                        </div>
+                        <label for="password_login">PASSWORD</label>
+                        <div class="password_area">
+                            <input type="password" name="password_login" placeholder="Enter your password" id="password_login" required>
+                            <!-- <div class="eye-icon position-absolute">
+                                <i class="fa-solid fa-eye" id="eye"></i>
+                            </div> -->
+                        </div>
+                        <!-- <a href="#">Forgot password?</a> -->
+                        <input type="submit" name="login_form" class="button" id="submit_login" value="Login" disabled>
+                    </form>
+                    <div class="signup" id="signup-link" style="color: rgba(0, 0, 0, 0.5);">
+                        <span class="signup">Don't have an account?
+                        <label class="link-signup" for="check">Sign Up</label>
+                        </span>
+                    </div>
+                </div>
+                <!-- Registration Form -->
+                <div class="registration form" id="registration-form">
+                    <header><u>Sign Up</u></header>
+                    <form name="signup_form" method="post" action="handle_login">
+                        {% csrf_token %}
+                        <div class="d-flex pt-2 pb-2">
+                            <label for="username_signup" class="m-auto pe-2 w-25">Username:</label>
+                            <input class="m-auto" type="text" name="username_signup" id="username" placeholder="Create a username" required>    
+                        </div>
+                        <span id="email-error" style="color: red;"></span>
+                        <div class="d-flex pt-2 pb-2">
+                            <label class="m-auto pe-2 w-25" for="email_signup">Email:</label>
+                            <input class="m-auto" type="text" name="email_signup" placeholder="Enter your email" id="email" required>    
+                        </div>
+                        <div class="d-flex pt-2 pb-2">
+                            <label class="m-auto pe-2 w-25" for="password_signup">Password:</label>
+                            <input class="m-auto" type="password" name="password_signup" placeholder="Create a password" id="password_signup" required>    
+                        </div>
+                        <div class="d-flex pt-2 pb-2 ">
+                            <label class="m-auto pe-2 w-25" for="confirm_password_signup">Confirm Password:</label>
+                            <input class="m-auto" type="password" name="confirm_password_signup" placeholder="Confirm your password" id="confirm_pass" required>
+                        </div>
+                        <input type="submit" name="signup_form" class="button" value="Sign Up" id="submit_register" disabled>
+                    </form>
+                    <div class="signup">
+                        <span class="signup">Already have an account?
+                            <label for="check">Login</label>
+                        </span>
+                    </div>
+                </div>
+            </div>
+{% endblock %}
+{% block extension %}
+    {% if incorrect_login %}
+        <script>
+            alert("Incorrect username or password. Please try again.");
+        </script>
+    {% endif %}
+
+    {% if email_already_existed %}
+        <script>
+            alert("This email is already been used");
+        </script>
+    {% endif %}
+
+    {% if username_already_existed %}
+        <script>
+            alert("This username is already been used");
+        </script>
+    {% endif %}
+
+    {% if password_not_match %}
+        <script>
+            alert("The password is not match");
+        </script>
+    {% endif %}
+
+    {% if not_login %}
+        <script>
+            alert("User not login yet");
+        </script>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script src="static\js\home.js"></script>
+
+{% endblock %}
+
+<!-- Left Panel -->
+{% block left %}
+    <div class="col d-flex border border-dark h-100" id="left-panel" style="min-height:50%">
+        <div class="input-data row d-flex  m-0" > 
+            <form name="calculate_form" action="home" method="post" class="row d-flex  m-0"> {% csrf_token %}
+                <div class="Electrolyte row pb-4" >
+                    
+                </div>
+
+                <div class="contain-ssa-idig col d-flex justify-content-around">
+                    <div class="ssa">
+                        <div class="label d-flex">
+                            <label for="ssa">SSA (m<sup>2</sup>/g)</label> <br>
+                        </div>
+                        <input type="text" name="ssa" value="{{ssa}}" placeholder="Required" required >   
+                    </div>
+                    <div class="ph">
+                        <div class="label d-flex">
+                            <label for="ph" class=" me-4">pH</label>
+                        </div>
+                        <input class=" " type="text" name="ph" id="ph" value="{{ph}}" placeholder="Required" required >
+                    </div>
+                    
+                </div>
+
+                <div class="contain-n-o-s col d-flex justify-content-around " >
+                    <div class="nitrogen">
+                        <div class="label d-flex">
+                            <label for="nitrogen">Nitrogen (%)</label>
+                        </div>
+                        <input type="text" name="nitrogen" value="{{nitrogen}}">
+                    </div>
+                    <div class="oxygen">
+                        <div class="label d-flex">
+                            <label for="oxygen">Oxygen (%)</label>
+                        </div>
+                        <input type="text" name="oxygen" value="{{o2}}">
+                    </div>
+                    <div class="sulphur">
+                        <div class="label d-flex">
+                            <label for="sulphur">Sulphur (%)</label>
+                        </div>
+                        <input type="text" name="sulphur" value="{{sulphur}}">
+                    </div>
+                </div>
+                <div class="density ph d-flex justify-content-around">
+                    <div class="density">
+                        <div class="label d-flex">
+                            <label for="density" class=" me-4">Current density (A/g)</label>
+                        </div>
+                        <input type="text" name="ag" class="density" value="{{ag}}">
+                    </div>
+
+                    <div class="idig">
+                        <div class="label d-flex">
+                            <label for="idig">I<sub>D</sub>/I<sub>G</sub></label>
+                        </div>
+                        <input type="text" name="idig" id="" value="{{idig}}">
+                    </div>
+                </div>
+
+                <div class=" col d-inline-flex justify-content-lg-evenly">
+                    
+                    <button type="reset" class="btn  m-auto " onclick="clear()">
+                        <strong class="m-auto">Clear</strong> 
+                    </button>
+
+                    <!-- <input type="reset" class="btn m-auto fw-bold" value="Clear"> -->
+                    
+                    <div class="d-flex align-items-center m-auto">
+                        <!-- <input class="btn btn-dark m-auto" type="submit" value="Calculate"> -->
+                        <button class="btn btn-dark m-auto d-flex" type="submit" onclick="calculate()">
+                            <span class="m-auto">Calculate</span> 
+                            <div class="spinner-border spinner-border-sm ml-auto pe-2" id="loading" role="status" aria-hidden="true" style="display:none"></div>
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+
+<!-- Right Panel -->
+{% block right %}
+    <div class="col d-flex border border-dark border-start-0" id="right-panel">
+        <div class="show-result row d-flex justify-content-between m-0">
+            <div class=" result d-flex border m-0 pt-5 ps-5 pe-3 justify-content-between">
+                <div class="predicted-capa col m-0 ">
+                    <div class="row ">
+                        <div class="m-0 text">
+                            <div class="text-0">Your Result</div>
+                            <!-- <div class="predict-num pt-4 pb-2">228 &#177 20 F/g</div>  -->
+                            <div class="predict-num">{{predict_num}}{% if predict_num %}<span> F/g</span>{% endif %}</div>
+                            <div class="text-1">Maximum Predicted Capacitances </div>
+                            <div class="text-2">Based On Your Input</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="suggest col d-flex m-0 ">
+                    <div class="row">
+                        <p class="text-0">Suggested Optimal Parameter Values</p>
+                        <!-- <p class=" border-bottom d-flex">Electrolyte Classification: <span class=" ms-auto me-5">{{ electrolyte }}</span></p> -->
+                        <p class=" border-bottom d-flex"><span class=" d-inline">SSA (m<sup>2</sup>/g): </span><span class=" ms-auto me-5">{{ ssa }}</span></p>
+                        <p class=" border-bottom d-flex"><span class="d-inline"> I<sub>D</sub>/I<sub>G</sub>:</span><span class="ms-auto me-5"> {{ idig }}</span></p>
+                        <p class=" border-bottom d-flex">Nitrogen (%):<span class=" ms-auto me-5">{{ nitrogen }}</span></p>
+                        <p class=" border-bottom d-flex">Oxygen (%): <span class=" ms-auto me-5">{{ o2 }}</span></p>
+                        <p class=" border-bottom d-flex">Sulphur (%): <span class=" ms-auto me-5">{{ sulphur }}</span></p>
+                        <p class=" border-bottom d-flex">Current Density (A/g): <span class="ms-auto me-5">{{ ag }}</span></p>
+                        <p class=" border-bottom d-flex">pH: <span class="ms-auto me-5">{{ ph }}</span></p>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="d-flex graph row row-cols-2" style="min-height:max-content">
+                {% if predict_num == '-' and predicted %}
+                    <div class=" pt-1">
+                        <label for="feature">Feature:</label>
+                        <select class="form-select form-select-sm" id="feature-option" class=" ms-2"  onchange="displayGraph()">
+                            {% for option in all_graph %}
+                                <option value="{{ option.missing_feature }}" >
+                                    {{ option.missing_feature }}
+                                </option>
+                            {% endfor %}
+                        </select>           
+                    </div>
+                    <br>
+                    <div class="flex-grow-1 m-auto"></div>
+
+                    <!-- {% autoescape off %} -->
+
+                    {% for fig in all_graph %}
+                        <div class="show_graph col" data-missing-value="{{ fig.missing_feature }}" 
+                            {% if forloop.first %} 
+                                style="display:block" 
+                            {% else %} 
+                                style="display:none" 
+                            {% endif %}>
+
+                            {{ fig.div_plot}}
+
+                        </div>
+                    {% endfor %}
+                    
+                    <!-- <div class="show_graph" id="show_graph" >
+                        {{ all_graph.0.div_plot}}
+                    </div>
+                    <div class="all_graph_data d-none" id="all_graph_data" >
+                        {{ all_graph }}
+                    </div> -->
+                    <!-- {% endautoescape %} -->
+                    
+                    
+
+                {% else %}
+                    <span>Graph: -</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}
