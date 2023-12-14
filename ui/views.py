@@ -154,6 +154,8 @@ def help(request):
 
 def log(request):
     username = request.session.get('user')
+    if(username is None):
+        return redirect('/')
     # Assuming test_data is a queryset
     # test_data = model.Calculate_Data.objects.filter(username = username);
     test_data = list(reversed(model.Calculate_Data.objects.filter(username = username)))
