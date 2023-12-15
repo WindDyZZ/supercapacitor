@@ -1,16 +1,6 @@
 from typing import Any
 from django.db import models
 
-# Create your models here.
-# class Person(models.Model):
-#     name = models.CharField(max_length=100, null=True)
-#     age = models.IntegerField(null=True)
-#     date = models.DateField(auto_now_add=True)
-#     pass
-
-#     def __str__(self) -> str:
-#         return self.name
-    
 class User(models.Model):
     username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(unique=True)

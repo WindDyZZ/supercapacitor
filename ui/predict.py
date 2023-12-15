@@ -45,23 +45,20 @@ def plot_predicted(focused_features, focused_features_data ,saved_model,df):
 
             predicted_capacitance_varying = saved_model.predict(varying_feature_df)
 
-            # Create Plotly figure
             fig = go.Figure()
 
-            # Add line trace to the figure
             fig.add_trace(go.Scatter(x=feature_range, y=predicted_capacitance_varying,
                                      mode='lines', name='Predicted Capacitance (Imputed Feature)'))
 
-            # Update layout
             fig.update_layout(
                 xaxis_title=missing_feature,
                 yaxis_title='Predicted Specific capacitance (F/g)',
                 title=f'Relationship between {missing_feature} and Predicted Capacitance',
                 showlegend=True,
                 autosize=True,
-                width=1200,  # Set width to 800 pixels
+                width=1200,  
                 height=500,
-                  # Set height to 600 pixels
+                 
             )
 
             div_plot = plot(fig, output_type="div")

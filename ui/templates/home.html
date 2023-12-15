@@ -73,11 +73,8 @@
                     <button type="reset" class="btn  m-auto " onclick="clear()">
                         <strong class="m-auto">Clear</strong> 
                     </button>
-
-                    <!-- <input type="reset" class="btn m-auto fw-bold" value="Clear"> -->
                     
                     <div class="d-flex align-items-center m-auto">
-                        <!-- <input class="btn btn-dark m-auto" type="submit" value="Calculate"> -->
                         <button class="btn btn-dark m-auto d-flex" type="submit" onclick="calculate()">
                             <div class="spinner-border spinner-border-sm m-auto me-2" id="loading" role="status" aria-hidden="true" style="display:none"></div>
                             <span class="m-auto">Calculate</span> 
@@ -100,7 +97,6 @@
                     <div class="row ">
                         <div class="m-0 text">
                             <div class="text-0">Your Result</div>
-                            <!-- <div class="predict-num pt-4 pb-2">228 &#177 20 F/g</div>  -->
                             <div class="predict-num">{{predict_num}}{% if predict_num %}<span> F/g</span>{% endif %}</div>
                             <div class="text-1">Maximum Predicted Capacitances </div>
                             <div class="text-2">Based On Your Input</div>
@@ -110,7 +106,6 @@
                 <div class="suggest col d-flex m-0 ">
                     <div class="row">
                         <p class="text-0">Parameter Values</p>
-                        <!-- <p class=" border-bottom d-flex">Electrolyte Classification: <span class=" ms-auto me-5">{{ electrolyte }}</span></p> -->
                         <p class=" border-bottom d-flex"><span class=" d-inline">SSA (m<sup>2</sup>/g): </span><span class=" ms-auto me-5">{{ ssa }}</span></p>
                         <p class=" border-bottom d-flex"><span class="d-inline"> I<sub>D</sub>/I<sub>G</sub>:</span><span class="ms-auto me-5"> {{ idig }}</span></p>
                         <p class=" border-bottom d-flex">Nitrogen (%):<span class=" ms-auto me-5">{{ nitrogen }}</span></p>
@@ -138,8 +133,6 @@
                     <br>
                     <div class="flex-grow-1 m-auto"></div>
 
-                    <!-- {% autoescape off %} -->
-
                     {% for fig in all_graph %}
                         <div class="show_graph col" data-missing-value="{{ fig.missing_feature }}" 
                             {% if forloop.first %} 
@@ -152,16 +145,6 @@
 
                         </div>
                     {% endfor %}
-                    
-                    <!-- <div class="show_graph" id="show_graph" >
-                        {{ all_graph.0.div_plot}}
-                    </div>
-                    <div class="all_graph_data d-none" id="all_graph_data" >
-                        {{ all_graph }}
-                    </div> -->
-                    <!-- {% endautoescape %} -->
-                    
-                    
 
                 {% else %}
                     <span>Graph: -</span>

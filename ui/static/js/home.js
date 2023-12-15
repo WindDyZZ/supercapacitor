@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
         return !isNaN(value.trim());
     }
 
-    // Function to check if all input fields are numeric
+
     function isFormValid() {
         let allNumeric = true;
         inputFields.forEach(function(input) {
@@ -66,35 +66,28 @@ document.addEventListener("DOMContentLoaded", function() {
         return allNumeric;
     }
 
-    // Initial state
     submitButton.disabled = !isFormValid();
 
-    // Event listener for input fields
     inputFields.forEach(function(input) {
         input.addEventListener("input", function() {
-            // Check validity in real-time
             isFormValid();
             submitButton.disabled = !isFormValid();
         });
 
         input.addEventListener("change", function() {
-            // Trigger custom validity check on change
             input.reportValidity();
         });
     });
 
-    // Event listener for form submission
     form.addEventListener('submit', function(event) {
-        // Check validity before submitting
         if (!isFormValid()) {
-            // Prevent form submission if not valid
             event.preventDefault();
         }
     });
 
     const clearButton = document.querySelector("button[type='reset']");
     clearButton.addEventListener('click', function(event) {
-        event.preventDefault(); // Prevent the default behavior (form submission)
+        event.preventDefault(); 
         clearForm();
     });
 

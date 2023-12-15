@@ -14,25 +14,14 @@ import numpy as np
 
 plt.switch_backend('Agg')
 
-# Load the CSV file into a DataFrame
 df = pd.read_csv('data/final_supercapacitor.csv')
-
-# Assuming 'saved_ensemble_model.pkl' is a file containing pickled data
 model_ensemble = joblib.load('saved_ensemble_model/saved_ensemble_model.pkl')
-
-# Save the DataFrame to a file (for example, a pickle file)
 df.to_pickle('data/df.pkl')
-
-# Load the DataFrame from the pickle file
 loaded_df = pd.read_pickle('data/df.pkl')
 
-# Now you can use loaded_df as needed
-
-# Assuming 'data/df.pkl' is a file containing pickled data
 with open('data/df.pkl', 'rb') as file:
     X_train = pickle.load(file)
 
-# Assuming CountVectorizer can be fit with X_train
 cv = CountVectorizer()
 cv.fit(X_train)
 
@@ -155,27 +144,20 @@ def log(request):
     username = request.session.get('user')
     if(username is None):
         return redirect('/')
-    # Assuming test_data is a queryset
+    
     # test_data = model.Calculate_Data.objects.filter(username = username);
     test_data = list(reversed(model.Calculate_Data.objects.filter(username = username)))
-
-    # Set the number of items per page
     items_per_page = 20
-
-    # Create a Paginator instance
     paginator = Paginator(test_data, items_per_page)
-
-    # Get the current page number from the request
     page = request.GET.get('page')
 
     try:
-        # Get the Page object for the requested page number
         test_data_page = paginator.page(page)
+
     except PageNotAnInteger:
-        # If page is not an integer, deliver the first page
         test_data_page = paginator.page(1)
+
     except EmptyPage:
-        # If page is out of range (e.g., 9999), deliver the last page
         test_data_page = paginator.page(paginator.num_pages)
 
     return render(request, 'log.html', {'test_data_page': test_data_page,'username':username,'log':True})
@@ -225,17 +207,14 @@ def handle_login(request):
             password = request.POST.get('password_signup')
             con_pass = request.POST.get('confirm_password_signup')
 
-            # Check if the email is already used
             if model.User.objects.filter(email=email).exists():
                 request.session['login'] = 'email_already_existed'
                 return redirect('ui:login')
 
-            # Check if the username already exists
             if model.User.objects.filter(username=username).exists():
                 request.session['login'] = 'username_already_existed'
                 return redirect('ui:login')
             if password == con_pass:
-                # Create the user
                 user = model.User.objects.create(
                     username = username,
                     email = email,
@@ -243,7 +222,6 @@ def handle_login(request):
                 )
                 user.save()
 
-                # Redirect to a success page or do other actions
                 request.session['user'] = user.username
                 return render(request, "home.html", {"username": username})
             else:
