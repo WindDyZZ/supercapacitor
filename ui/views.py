@@ -190,18 +190,22 @@ def handle_login(request):
 
             user = model.User.objects.filter(username = username_post).first()
             email = model.User.objects.filter(email = username_post).first()
+
+            print(user)
+            print(email)
         
 
-            if user.username is not None:
-                if user.password != password_post:
+            if user is not None:
+                print(user.password)
+                if user.password == password_post:
                     request.session['user'] = user.username
                     return redirect("ui:home")
                 else:    
                     incorrect_login = True  
                     request.session['login'] = 'incorrect_login'
                     return redirect('ui:login')
-            elif email.username is not None:
-                if email.password != password_post:
+            elif email is not None:
+                if email.password == password_post:
                     request.session['user'] = email.username
                     return redirect("ui:home")
                 else:    
