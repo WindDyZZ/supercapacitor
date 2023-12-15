@@ -26,22 +26,4 @@ The system targets chemists, scientists, scholars, and general users who can ben
 
 Users input parameters such as substance nature, SSA, ID/IG, % of Nitrogen, % of Oxygen, % of Sulphur, and Current density to calculate maximum capacitance. The web interface streamlines this process, as illustrated in Figure 3 of the provided process diagram.
 
-## Getting Started
 
-[Instructions on how to set up and run the web application]
-
-## Usage
-
-[Guidelines on how users can interact with and utilize the web application]
-
-## Contributors
-
-[List of contributors and their roles]
-
-## License
-
-[Specify the license for your project]
-
-## Acknowledgments
-
-[Optional: Acknowledge any third-party resources, libraries, or inspiration]
