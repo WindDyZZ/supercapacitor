@@ -52,12 +52,10 @@ def login(request):
     else:
         return render(request, "login.html",{"login":login})
 
-
 def home(request):
     username = request.session.get('user')
     if username is not None:
         if request.method == "POST":
-                
             ph          = request.POST.get("ph").strip()
             ssa         = request.POST.get("ssa").strip()
             idig        = request.POST.get("idig").strip()
@@ -68,9 +66,6 @@ def home(request):
             predicted_value =   '-'
             all_graph       =   None
 
-
-
-            
             focused_features = ['SSA (m2/g)', 'ID/IG', '%N', '%O', '%S', 'Current density (A/g)', 'Calculated pH']
             focused_features_data = [ssa, idig, nitrogen, oxygen, sulphur, ag, ph]
 
@@ -133,19 +128,14 @@ def about(request):
 
 def help(request):
     pdf_path = 'pdf/UserManual.pdf'
-
     response = FileResponse(open(pdf_path, 'rb'), content_type='application/pdf')
-
     return response
-
-
 
 def log(request):
     username = request.session.get('user')
     if(username is None):
         return redirect('/')
-    
-    # test_data = model.Calculate_Data.objects.filter(username = username);
+
     test_data = list(reversed(model.Calculate_Data.objects.filter(username = username)))
     items_per_page = 20
     paginator = Paginator(test_data, items_per_page)
@@ -173,10 +163,6 @@ def handle_login(request):
             user = model.User.objects.filter(username = username_post).first()
             email = model.User.objects.filter(email = username_post).first()
 
-            print(user)
-            print(email)
-        
-
             if user is not None:
                 print(user.password)
                 if user.password == password_post:
@@ -198,9 +184,7 @@ def handle_login(request):
                 incorrect_login = True  
                 request.session['login'] = 'incorrect_login'
                 return redirect('ui:login')
-
-                
-            
+          
         elif 'signup_form' in request.POST:
             username = request.POST.get('username_signup')
             email = request.POST.get('email_signup')
