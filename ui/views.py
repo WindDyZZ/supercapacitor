@@ -1,3 +1,4 @@
+# Import necessary modules and libraries
 from django.shortcuts import render, redirect
 from django.http import FileResponse
 import ui.models as model
@@ -12,13 +13,16 @@ import pandas as pd
 from .predict import predicted,plot_predicted
 import numpy as np
 
+# Set the backend for matplotlib
 plt.switch_backend('Agg')
 
+# Load the dataset and the pre-trained model
 df = pd.read_csv('data/final_supercapacitor.csv')
 model_ensemble = joblib.load('saved_ensemble_model/saved_ensemble_model.pkl')
 df.to_pickle('data/df.pkl')
 loaded_df = pd.read_pickle('data/df.pkl')
 
+# Load data for CountVectorizer
 with open('data/df.pkl', 'rb') as file:
     X_train = pickle.load(file)
 
@@ -68,9 +72,6 @@ def home(request):
             predicted_value =   '-'
             all_graph       =   None
 
-
-
-            
             focused_features = ['SSA (m2/g)', 'ID/IG', '%N', '%O', '%S', 'Current density (A/g)', 'Calculated pH']
             focused_features_data = [ssa, idig, nitrogen, oxygen, sulphur, ag, ph]
 
@@ -144,8 +145,7 @@ def log(request):
     username = request.session.get('user')
     if(username is None):
         return redirect('/')
-    
-    # test_data = model.Calculate_Data.objects.filter(username = username);
+
     test_data = list(reversed(model.Calculate_Data.objects.filter(username = username)))
     items_per_page = 20
     paginator = Paginator(test_data, items_per_page)
@@ -173,10 +173,6 @@ def handle_login(request):
             user = model.User.objects.filter(username = username_post).first()
             email = model.User.objects.filter(email = username_post).first()
 
-            print(user)
-            print(email)
-        
-
             if user is not None:
                 print(user.password)
                 if user.password == password_post:
@@ -197,9 +193,7 @@ def handle_login(request):
             else:
                 incorrect_login = True  
                 request.session['login'] = 'incorrect_login'
-                return redirect('ui:login')
-
-                
+                return redirect('ui:login')       
             
         elif 'signup_form' in request.POST:
             username = request.POST.get('username_signup')
