@@ -141,7 +141,9 @@
                                 style="display:none" 
                             {% endif %}>
 
+                            {% autoescape off %}
                             {{ fig.div_plot}}
+                            {% endautoescape %}
 
                         </div>
                     {% endfor %}
