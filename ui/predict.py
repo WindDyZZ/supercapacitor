@@ -9,11 +9,14 @@ def predicted(focused_features, focused_features_data ,saved_model):
     convert_df = convert_df.T
     convert_df.columns = convert_df.iloc[0]
     convert_df = convert_df[1:]
-    predicted_value = saved_model.predict(convert_df)[0]  
-    return predicted_value
+    predicted_value = saved_model.predict(convert_df)[0]
+    convert_df['Predicted Value'] = predicted_value
+    # print(convert_df)
+    return predicted_value,convert_df
 
 def plot_predicted(focused_features, focused_features_data ,saved_model,df):
     input_features = {}
+    combined_csv_output = None
     for data, feature in zip(focused_features_data, focused_features):
         if data == '':
             input_features[feature] = None
@@ -44,7 +47,18 @@ def plot_predicted(focused_features, focused_features_data ,saved_model,df):
                     varying_feature_df[col] = input_df[col][0]
 
             predicted_capacitance_varying = saved_model.predict(varying_feature_df)
-
+            
+            
+            csv_output = varying_feature_df
+            csv_output['Predicted Value'] = predicted_capacitance_varying
+            # print(csv_output)
+            if combined_csv_output is None:
+                combined_csv_output = csv_output.copy()
+            else:
+                csv_output = csv_output[1:]
+                
+                combined_csv_output = pd.concat([combined_csv_output, csv_output], ignore_index=True)
+            
             fig = go.Figure()
 
             fig.add_trace(go.Scatter(x=feature_range, y=predicted_capacitance_varying,
@@ -65,4 +79,6 @@ def plot_predicted(focused_features, focused_features_data ,saved_model,df):
 
             all_graph.append({'div_plot': div_plot, 'missing_feature': missing_feature})
 
-    return all_graph
+    
+    # print(combined_csv_output)
+    return all_graph,combined_csv_output

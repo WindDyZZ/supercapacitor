@@ -11,4 +11,5 @@ urlpatterns = [
     path('logout',views.logout),
     path('UserMannual', views.help),
     path('about',views.about),
+    path('download-csv/', views.download_csv, name='download_csv'),
 ]

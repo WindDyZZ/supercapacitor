@@ -100,6 +100,14 @@
                             <div class="predict-num">{{predict_num}}{% if predict_num %}<span> F/g</span>{% endif %}</div>
                             <div class="text-1">Maximum Predicted Capacitances </div>
                             <div class="text-2">Based On Your Input</div>
+                            <div class="csv_df" id="csv_df" style="display: none;" csv_df = "{{ csv_df.to_csv}}" ></div>
+                            
+                            <!-- <a href="{% url 'ui:download_csv' %}?data={{ csv_data }}" class="btn btn-info" download="predicted_data.csv">Download CSV</a> -->
+                            <!-- <a href="{% url 'ui:download_csv' %}?data=test" class="btn btn-info" download="predicted_data.csv">Download CSV</a> -->
+                            {% if predict_num != '-' and predicted %}
+                            <button id="download-btn" class="btn btn-warning" onclick="download_csv()">Download CSV</button>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>
@@ -120,7 +128,7 @@
 
             <div class="d-flex graph row row-cols-2" style="min-height:max-content">
                 {% if predict_num == '-' and predicted %}
-                    <div class=" pt-1">
+                    <div class=" pt-1 d-inline-flex" style="column-gap: 1em;">
                         <label for="feature">Feature:</label>
                         <select class="form-select form-select-sm" id="feature-option" class=" ms-2"  onchange="displayGraph()">
                             {% for option in all_graph %}
@@ -128,7 +136,8 @@
                                     {{ option.missing_feature }}
                                 </option>
                             {% endfor %}
-                        </select>           
+                        </select>
+                        <button id="download-btn" class="btn btn-warning " style="white-space: nowrap;text-align:center;" onclick="download_csv()">Download CSV</button>           
                     </div>
                     <br>
                     <div class="flex-grow-1 m-auto"></div>

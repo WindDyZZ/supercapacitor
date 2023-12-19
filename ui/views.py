@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from django.http import FileResponse
+from django.http import FileResponse,HttpResponse
+from django.utils.encoding import escape_uri_path
 import ui.models as model
 import matplotlib.pyplot as plt
 from io import BytesIO
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+import base64
 import joblib
 import pickle
 from sklearn.feature_extraction.text import CountVectorizer
@@ -65,6 +66,7 @@ def home(request):
             ag          = request.POST.get("ag").strip()
             predicted_value =   '-'
             all_graph       =   None
+            csv_df          = None
 
             focused_features = ['SSA (m2/g)', 'ID/IG', '%N', '%O', '%S', 'Current density (A/g)', 'Calculated pH']
             focused_features_data = [ssa, idig, nitrogen, oxygen, sulphur, ag, ph]
@@ -77,11 +79,11 @@ def home(request):
             focused_features_data = np.array(focused_features_data)
 
             if has_none_value:
-                all_graph = plot_predicted(focused_features, focused_features_data ,model_ensemble,df)
+                all_graph,csv_df = plot_predicted(focused_features, focused_features_data ,model_ensemble,df)
             else:
                 for i in range(len(focused_features_data)):
                     focused_features_data[i] = float(focused_features_data[i])
-                predicted_value = predicted(focused_features, focused_features_data ,model_ensemble)
+                predicted_value,csv_df = predicted(focused_features, focused_features_data ,model_ensemble)
             
 
             if predicted_value != '-' :
@@ -99,6 +101,7 @@ def home(request):
                          'predicted_value':predicted_value,
                          'all_graph':all_graph,
                          'predicted' : True,
+                         'csv_df':csv_df,
                          'home':True
                          }
             create_model = model.Calculate_Data.objects.create(
@@ -211,6 +214,24 @@ def handle_login(request):
             else:
                 request.session['login'] = 'password_not_match'
                 return redirect('ui:login')
+
+def download_csv(request):
+    csv_data = request.GET.get('data', '')
+
+    # # Decode the base64-encoded CSV data
+    csv_bytes = base64.b64decode(csv_data)
+    csv_content = csv_bytes.decode('utf-8')
+   
+
+    # Create a response with the CSV file
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="{escape_uri_path("predicted_data.csv")}"'
+
+    # Write the CSV content to the response
+    response.write(csv_content)
+
+    return response
+    return True
 
 def logout(request):
     del request.session['user']

@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             }
             else if(input.name=='ph'){
-                console.log(input.value);
+                // console.log(input.value);
                 if (input.value.trim()==''){
                     input.setCustomValidity('This field can not be empty!');
                     allNumeric = false;
@@ -129,3 +129,20 @@ function displayGraph() {
 function calculate(){
     document.getElementById('loading').style.display = 'block';
 }
+
+
+function download_csv(data){
+        var csv_data = document.getElementById('csv_df').getAttribute('csv_df');
+
+        var base64data = btoa(csv_data);
+    
+        var uri = 'data:text/csv;base64,' + base64data;
+    
+        var link = document.createElement('a');
+        link.href = uri;
+        link.download = 'predicted_data.csv';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);   
+}
+
